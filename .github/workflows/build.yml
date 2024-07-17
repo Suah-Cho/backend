@@ -22,3 +22,23 @@ jobs:
             - run: |
                 docker build . -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }}
                 docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }}
+                - name: Chekcout cicd repository
+                uses: actions/checkout@v2
+                with:
+                  repository: 'Suah-Cho/cicd'
+                  ref: main
+                  token: ${{ secrets.PAT }}
+                  path: cicd
+              
+            - name: Update Image Manifest
+              run: |
+                sed -i '/name: backend/{n;n;s/newTag:.*/newTag: '"${{ github.sha }}"'/}' cicd/manifest/image-manifest.yml
+                cat cicd/manifest/image-manifest.yml
+              
+            - name: Commit and Push Image Manifest File
+              run: |
+                cd cicd
+                git config --global user.email "sacho0929@gmail.com"
+                git config --global user.name "Suah-Cho"
+                git commit -am "Update image manifest ( backend ${{ github.sha }} )"
+                git push origin main

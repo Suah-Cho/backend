@@ -22,13 +22,14 @@ jobs:
             - run: |
                 docker build . -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }}
                 docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }}
-                - name: Chekcout cicd repository
-                uses: actions/checkout@v2
-                with:
-                  repository: 'Suah-Cho/cicd'
-                  ref: main
-                  token: ${{ secrets.PAT }}
-                  path: cicd
+            
+            - name: Chekcout cicd repository
+              uses: actions/checkout@v2
+              with:
+                repository: 'Suah-Cho/cicd'
+                ref: main
+                token: ${{ secrets.PAT }}
+                path: cicd
               
             - name: Update Image Manifest
               run: |

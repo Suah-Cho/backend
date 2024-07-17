@@ -33,7 +33,7 @@ jobs:
               
             - name: Update Image Manifest
               run: |
-                sed -i '/name: backend/{s|image: arctestsa.azurecr.io/backend:.*|image: arctestsa.azurecr.io/backend:'"${{ github.sha }}"'|}' cicd/resources/docker-compose.yml
+                sed -i '/name: backend/{n;s|image: arctestsa.azurecr.io/backend:.*|image: arctestsa.azurecr.io/backend:'"${{ github.sha }}"'|}' cicd/resources/docker-compose.yml
                 cat cicd/resources/docker-compose.yml
               
             - name: Commit and Push Image Manifest File

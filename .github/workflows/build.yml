@@ -1,0 +1,24 @@
+name: Build and Push Frontend Image to ACR
+
+on:
+    push:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            
+            - name: Login ACR
+              uses: azure/docker-login@v2
+              with:
+                login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+                username: ${{ secrets.ACR_USERNAME }}
+                password: ${{ secrets.ACR_PASSWORD }}
+            - run: |
+                docker build . -t ${{ secrets.ACR_LOGIN_SERVER }}/gp-fe-test:${{ github.sha }}
+                docker push ${{ secrets.ACR_LOGIN_SERVER }}/gp-fe-test:${{ github.sha }}

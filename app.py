@@ -10,6 +10,7 @@ def get_test():
     return JSONResponse(status_code=200, content={"message": "Hello, World!"})
 
 slack_url = os.environ.get('TEST_SLAK_URL')
+print(slack_url)
 
 @app.post('/')
 def event_grid(data: dict):

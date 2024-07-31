@@ -20,7 +20,7 @@ jobs:
                 username: ${{ secrets.ACR_USERNAME }}
                 password: ${{ secrets.ACR_PASSWORD }}
             - run: |
-                docker build -e TEST_SLAK_URL=${{ secrets.TEST_SLAK_URL }} -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }} .
+                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }} .
                 docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }}
             
             - name: Chekcout cicd repository

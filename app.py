@@ -10,13 +10,9 @@ MODE = os.getenv('MODE')
 
 @app.get('/')
 def get_test():
-    logging.info("API_MOCDE is " + API_MODE)
-    logging.info("MODE is " + MODE)
-    if API_MODE:
-        logging.info(f"API_MODE: {API_MODE}")
-        return JSONResponse(status_code=200, content={"message": "Hello, World! from " + API_MODE})
-    else:
-        return JSONResponse(status_code=200, content={"message": "Hello, World!"})
+    
+    return JSONResponse(status_code=200, content={"message": "Hello, World! from " + "API MODE is " + API_MODE + "MODE is " + MODE})
+
 
 
 @app.post('/')

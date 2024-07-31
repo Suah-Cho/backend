@@ -1,0 +1,61 @@
+name: Build and Push Frontend Image to ACR
+
+on:
+    push:
+        branches:
+            - dev
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v2
+            
+            - name: Get next version
+              uses: reecetech/version-increment@2024.4.3
+              id: version
+              with:
+                scheme: semver
+                increment: patch
+                
+            - name: Create a GitHub Release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.PAT }}
+              with:
+                tag_name: ${{ steps.version.outputs.version }}
+                release_name: Release ${{ steps.version.outputs.version }}
+                body: Automated release for version ${{ steps.version.outputs.version }}
+            
+            - name: Login ACR
+              uses: azure/docker-login@v2
+              with:
+                login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+                username: ${{ secrets.ACR_USERNAME }}
+                password: ${{ secrets.ACR_PASSWORD }}
+            - run: |
+                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
+                docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }}
+            
+            - name: Chekcout cicd repository
+              uses: actions/checkout@v2
+              with:
+                repository: 'Suah-Cho/cicd'
+                ref: dev
+                token: ${{ secrets.PAT }}
+                path: cicd
+              
+            - name: Update Image Manifest
+              run: |
+                sed -i '/croft-api-server:/,/restart: always/{s|image: arctestsa.azurecr.io/backend:.*|image: arctestsa.azurecr.io/backend:'"${{ github.sha }}"'|}' cicd/resources/docker-compose.yml
+                cat cicd/resources/docker-compose.yml
+              
+            - name: Commit and Push Image Manifest File
+              run: |
+                cd cicd
+                git config --global user.email "sacho0929@gmail.com"
+                git config --global user.name "Suah-Cho"
+                git commit -am "Update backend image - backend ${{ steps.version.outputs.version }}"
+                git push origin dev

@@ -12,6 +12,22 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
+
+            - name: Get next version
+              uses: reecetech/version-increment@2024.4.3
+              id: version
+              with:
+                scheme: semver
+                increment: patch
+                
+            - name: Create a GitHub Release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.PAT }}
+              with:
+                tag_name: ${{ steps.version.outputs.version }}
+                release_name: Release ${{ steps.version.outputs.version }}
+                body: Automated release for version ${{ steps.version.outputs.version }}
             
             - name: Login ACR
               uses: azure/docker-login@v2
@@ -20,8 +36,8 @@ jobs:
                 username: ${{ secrets.ACR_USERNAME }}
                 password: ${{ secrets.ACR_PASSWORD }}
             - run: |
-                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }} .
-                docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ github.sha }}
+                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
+                docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }}
             
             - name: Chekcout cicd repository
               uses: actions/checkout@v2
@@ -41,5 +57,5 @@ jobs:
                 cd cicd
                 git config --global user.email "sacho0929@gmail.com"
                 git config --global user.name "Suah-Cho"
-                git commit -am "Update backend image - backend ${{ github.sha }}"
+                git commit -am "Update backend image - backend ${{ steps.version.outputs.version }}"
                 git push origin dev

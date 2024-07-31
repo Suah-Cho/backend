@@ -8,7 +8,10 @@ API_MODE = os.getenv('API_MODE')
 
 @app.get('/')
 def get_test():
-    return JSONResponse(status_code=200, content={"message": "Hello, World!"})
+    if API_MODE:
+        return JSONResponse(status_code=200, content={"message": "Hello, World! from " + API_MODE})
+    else:
+        return JSONResponse(status_code=200, content={"message": "Hello, World!"})
 
 
 @app.post('/')

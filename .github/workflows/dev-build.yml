@@ -68,9 +68,9 @@ jobs:
           uses: rtCamp/action-slack-notify@v2
           env:
             SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
-            SLACK_CHANNEL: ${{ secrets.SLACK_CHANNEL }}
-            SLACK_COLOR: ${{ job.status }} # 또는 'green', '#ff00ff' 처럼 직접 색상 지정
-            SLACK_USERNAME: Github CI
-            SLACK_ICON: https://st2.depositphotos.com/2274151/11073/v/950/depositphotos_110731914-stock-illustration-failed-red-grunge-round-vintage.jpg
-            SLACK_TITLE: Message
-            SLACK_MESSAGE: ':boom: Deploy Result: ${{ job.status }}\nCommit Message: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}'
+            SLACK_CHANNEL: "github-actions-results"
+            SLACK_COLOR: "green"
+            SLACK_USERNAME: "Github CI"
+            SLACK_ICON: ":rocket:"
+            SLACK_TITLE: "Message"
+            SLACK_MESSAGE: ":boom: Deploy Result: ${{ job.status }}\nCommit Message: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"

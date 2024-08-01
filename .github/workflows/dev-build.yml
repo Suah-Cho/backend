@@ -70,4 +70,4 @@ jobs:
                 SLACK_USERNAME: "Github CI"
                 SLACK_ICON: ":rocket:"
                 SLACK_TITLE: "Frontend CI Dev"
-                SLACK_MESSAGE: ":rocket: Deploy Result: ${{ job.status }}\nCommit Message: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+                SLACK_MESSAGE: ":rocket: Build Result: ${{ job.status }}\nCommit Message: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"

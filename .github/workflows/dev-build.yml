@@ -67,7 +67,7 @@ jobs:
         - name: Notify message to Slack
           uses: rtCamp/action-slack-notify@v2
           env:
-            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK }}
+            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
             SLACK_CHANNEL: "github-actions-results"
             SLACK_COLOR: "green"
             SLACK_USERNAME: "Github CI"

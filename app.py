@@ -5,6 +5,7 @@ import logging
 import os
 
 app = FastAPI()
+
 API_MODE = os.getenv('API_MODE')
 MODE = os.getenv('MODE')
 

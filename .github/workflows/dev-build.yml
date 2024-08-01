@@ -48,12 +48,12 @@ jobs:
                 token: ${{ secrets.PAT }}
                 path: cicd
               
-            - name: Update Image Manifest
+            - name: Update Image Tag
               run: |
                 sed -i '/croft-api-server:/,/restart: always/{s|image: arctestsa.azurecr.io/backend:.*|image: arctestsa.azurecr.io/backend:'"${{ github.sha }}"'|}' cicd/resources/docker-compose.yml
                 cat cicd/resources/docker-compose.yml
               
-            - name: Commit and Push Image Manifest File
+            - name: Commit and Push docker-compose.yml File
               run: |
                 cd cicd
                 git config --global user.email "sacho0929@gmail.com"
@@ -62,6 +62,7 @@ jobs:
                 git push origin dev
             
             - name: Notify message to Slack
+              if: always()
               uses: rtCamp/action-slack-notify@v2
               env:
                 SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

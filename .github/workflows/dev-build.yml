@@ -61,22 +61,13 @@ jobs:
                 git commit -am "Update backend image - backend ${{ steps.version.outputs.version }}"
                 git push origin dev
             
-            - name: Set build status
-              id: build_status
-              run: echo "BUILD_STATUS=${{ job.status }}" >> $GITHUB_ENV
-            
-    slackNotify:
-      if: always()
-      runs-on: ubuntu-latest
-      needs: build
-      steps:
-        - name: Notify message to Slack
-          uses: rtCamp/action-slack-notify@v2
-          env:
-            SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-            SLACK_CHANNEL: "github-actions-results"
-            SLACK_COLOR: "green"
-            SLACK_USERNAME: "Github CI"
-            SLACK_ICON: ":rocket:"
-            SLACK_TITLE: "Frontend CI Dev"
-            SLACK_MESSAGE: ":rocket: Deploy Result: ${{ env.BUILD_STATUS }}\nCommit Message: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"
+            - name: Notify message to Slack
+              uses: rtCamp/action-slack-notify@v2
+              env:
+                SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+                SLACK_CHANNEL: "github-actions-results"
+                SLACK_COLOR: "green"
+                SLACK_USERNAME: "Github CI"
+                SLACK_ICON: ":rocket:"
+                SLACK_TITLE: "Frontend CI Dev"
+                SLACK_MESSAGE: ":rocket: Deploy Result: ${{ job.status }}\nCommit Message: ${{ github.event.head_commit.message }}\nAuthor: ${{ github.actor }}\n${{ github.event.pull_request.html_url || github.event.head_commit.url }}"

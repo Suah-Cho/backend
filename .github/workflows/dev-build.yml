@@ -5,6 +5,7 @@ on:
         branches:
             - dev
 
+            
 jobs:
     build:
         runs-on: ubuntu-latest
@@ -62,7 +63,7 @@ jobs:
             
             - name: Set build status
               id: build_status
-              run: echo "BUILD_STATUS"=${{ job.status }} >> $GITHUB_ENV
+              run: echo "BUILD_STATUS=${{ job.status }}" >> $GITHUB_ENV
             
     slackNotify:
       if: always()

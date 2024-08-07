@@ -14,7 +14,6 @@ def get_test():
     return JSONResponse(status_code=200, content={"message": "Hello, World! from " + "API MODE is " + API_MODE + "MODE is " + MODE})
 
 
-
 @app.post('/')
 def event_grid(data: dict):
     print(data)

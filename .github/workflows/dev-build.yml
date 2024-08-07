@@ -19,7 +19,7 @@ jobs:
               id: version
               with:
                 scheme: semver
-                increment: patch
+                increment: minor
                 
             - name: Create a GitHub Release
               uses: actions/create-release@v1

@@ -20,6 +20,7 @@ jobs:
               with:
                 scheme: semver
                 increment: patch
+                release_branch: dev
                 
             - name: Create a GitHub Release
               uses: actions/create-release@v1

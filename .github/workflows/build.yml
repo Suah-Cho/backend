@@ -12,53 +12,15 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
-
-            - name: Get next version
-              uses: reecetech/version-increment@2024.4.3
-              id: version
-              with:
-                scheme: semver
-                increment: minor
-                
-            - name: Create a GitHub Release
-              uses: actions/create-release@v1
-              env:
-                GITHUB_TOKEN: ${{ secrets.PAT }}
-              with:
-                tag_name: ${{ steps.version.outputs.version }}
-                release_name: Release ${{ steps.version.outputs.version }}
-                body: Automated release for version ${{ steps.version.outputs.version }}
-
-            - name: docker image build and test
-              run: |
-                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
-            
-            - name: Login ACR
-              uses: azure/docker-login@v2
-              with:
-                login-server: ${{ secrets.ACR_LOGIN_SERVER }}
-                username: ${{ secrets.ACR_USERNAME }}
-                password: ${{ secrets.ACR_PASSWORD }}
-            - run: |
-                docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }}
-            
-            - name: Chekcout cicd repository
-              uses: actions/checkout@v2
-              with:
-                repository: 'Suah-Cho/cicd'
-                ref: main
-                token: ${{ secrets.PAT }}
-                path: cicd
               
-            - name: Update Image Manifest
-              run: |
-                sed -i '/croft-api-server:/,/restart: always/{s|image: arctestsa.azurecr.io/backend:.*|image: arctestsa.azurecr.io/backend:'"${{ steps.version.outputs.version }}"'|}' cicd/resources/docker-compose.yml
-                cat cicd/resources/docker-compose.yml
+            - name: Get secrets
+              uses: dmitriybobrovskiy/get-azure-keyvault-secrets@v1.2.0
+              with:
+                login_credentials: ${{ secrets.AZURE_CREDENTIALS }}
+                keyvault: croft-gp-kv
+                secrets_file_path: ./secrets.env
               
-            - name: Commit and Push Image Manifest File
+            - name: test confirm
               run: |
-                cd cicd
-                git config --global user.email "sacho0929@gmail.com"
-                git config --global user.name "Suah-Cho"
-                git commit -am "Update backend image - backend ${{ steps.version.outputs.version }}"
-                git push origin main
+                cat ./secrets.env
+            

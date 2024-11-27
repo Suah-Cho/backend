@@ -23,4 +23,9 @@ jobs:
               with:
                 keyvault: "croft-gp-kv"
                 secrets: "GP-DEV-API-MODE"
+
+            - name: Print env
+              run: |
+                echo "GP-DEV-API-MODE value : $GP-DEV-API-MODE"
+                env
               

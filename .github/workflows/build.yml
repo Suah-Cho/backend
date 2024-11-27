@@ -28,6 +28,10 @@ jobs:
                 tag_name: ${{ steps.version.outputs.version }}
                 release_name: Release ${{ steps.version.outputs.version }}
                 body: Automated release for version ${{ steps.version.outputs.version }}
+
+            - name: docker image build and test
+              run: |
+                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
             
             - name: Login ACR
               uses: azure/docker-login@v2
@@ -36,7 +40,6 @@ jobs:
                 username: ${{ secrets.ACR_USERNAME }}
                 password: ${{ secrets.ACR_PASSWORD }}
             - run: |
-                docker build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
                 docker push ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }}
             
             - name: Chekcout cicd repository

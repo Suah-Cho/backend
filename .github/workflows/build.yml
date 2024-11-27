@@ -12,17 +12,15 @@ jobs:
         steps:
             - name: Checkout repository
               uses: actions/checkout@v2
+
+            - name: Azure Login
+              uses: Azure/login@v1
+              with:
+                creds: ${{ secrets.AZURE_CREDENTIALS }}
               
             - name: Get secrets
-              uses: dmitriybobrovskiy/get-azure-keyvault-secrets@v1.2.0
+              uses: Azure/get-keyvault-secrets@v1
               with:
-                login_credentials: ${{ secrets.AZURE_CREDENTIALS }}
-                keyvault: croft-gp-kv
-                secrets_file_path: ./secrets.env
+                keyvault: "croft-gp-kv"
+                secrets: "GP-DEV-API-MODE"
               
-            - name: test confirm
-              run: |
-                ls
-                cat ${{ github.action_path }}/secrets.env
-                cat ./secrets.env
-            

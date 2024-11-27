@@ -22,5 +22,7 @@ jobs:
               
             - name: test confirm
               run: |
+                ls
+                cat ${{ github.action_path }}/secrets.env
                 cat ./secrets.env
             

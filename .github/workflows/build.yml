@@ -30,4 +30,5 @@ jobs:
               run: |
                 ls -al
                 cd CICD-pipeline/resources/scripts
+                ./make_env.bash dev
                 ls -al

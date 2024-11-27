@@ -29,3 +29,5 @@ jobs:
             - name: make env file
               run: |
                 ls -al
+                cd CICD-pipeline/resources/scripts
+                ls -al

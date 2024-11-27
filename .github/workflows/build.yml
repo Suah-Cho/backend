@@ -28,10 +28,4 @@ jobs:
               
             - name: make env file
               run: |
-                cd CICD-pipeline/resources/script
-                ./make_env.bash dev
-
-            - name: Confirm
-              run: |
-                cat ./dev.env
-              
+                ls -al

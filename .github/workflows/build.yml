@@ -17,15 +17,21 @@ jobs:
               uses: Azure/login@v1
               with:
                 creds: ${{ secrets.AZURE_CREDENTIALS }}
-              
-            - name: Get secrets
-              uses: Azure/get-keyvault-secrets@v1
-              with:
-                keyvault: "croft-gp-kv"
-                secrets: "GP-DEV-API-MODE"
 
-            - name: Print env
+            - name: checkout cicd
+              uses: actions/checkout@v2
+              with:
+                repository: 'Suah-Cho/CICD-pipeline'
+                ref: main
+                token: ${{ secrets.PAT }}
+                path: CICD-pipeline
+              
+            - name: make env file
               run: |
-                echo "GP-DEV-API-MODE value : $GP-DEV-API-MODE"
-                env
+                cd CICD-pipeline/resources/script
+                ./make_env.bash dev
+
+            - name: Confirm
+              run: |
+                cat ./dev.env
               

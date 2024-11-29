@@ -80,9 +80,19 @@ jobs:
               run: |
                 docker push ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }}
 
-            - name: test
+            - name: Update docker-compose.yml
               run: |
-                echo "dddfaegadfa;jgklaemk"
+                sed -i '/croft-api-server:/,/restart: always/{s|image: ${{ secrets.ACR_LOGIN_SERVER }}/gp-backend:.*|image: ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:'"${{ steps.version.outputs.version }}"'|}' CICD-pipeline/resources/docker-compose.yml
+                cat CICD-pipeline/resources/docker-compose.yml
+      
+      
+            - name: Commit and Push to CICD-pipeline repository
+              run: |
+                cd CICD-pipeline
+                git config user.email "${{ secrets.USEREMAIL }}"
+                git config user.name "${{ secrets.USERNAME }}"
+                git commit -am "Update backend image - test-backend:${{ steps.version.outputs.version }}"
+                git push origin main
       
 
 

@@ -47,6 +47,8 @@ jobs:
                 docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/backend:${{ steps.version.outputs.version }}
 
                 echo "Waiting for the container to start..."
+
+                docker ps
                 
                 echo "Testing /api/docs/endpoint..."
                 status_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:8080/api/docs)

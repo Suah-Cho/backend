@@ -74,8 +74,15 @@ jobs:
                 login-server: ${{ secrets.ACR_LOGIN_SERVER }}
                 username: ${{ secrets.ACR_USERNAME }}
                 password: ${{ secrets.ACR_PASSWORD }}
-            - run: |
+            
+            - name: push the image to acr
+              if: steps.testing.outputs.status_code == 200
+              run: |
                 docker push ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }}
+
+            - name: test
+              run: |
+                echo "dddfaegadfa;jgklaemk"
       
 
 

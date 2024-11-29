@@ -44,9 +44,8 @@ jobs:
               
             - name: make env file
               run: |
-                cd CICD-pipeline/resources/scripts
-                chmod +x make_env.bash
-                ./make_env.bash dev
+                chmod +x ./CICD-pipeline/resources/scripts/make_env.bash
+                ./CICD-pipeline/resources/scripts/make_env.bash dev
                 pwd
 
             - name: Image build and testing

@@ -44,11 +44,10 @@ jobs:
               
             - name: make env file
               run: |
-                ls -al
                 cd CICD-pipeline/resources/scripts
                 chmod +x make_env.bash
                 ./make_env.bash dev
-                ls -al
+                pwd
 
             - name: Image build and testing
               id: testing

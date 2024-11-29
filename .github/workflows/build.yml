@@ -19,6 +19,15 @@ jobs:
               with:
                 scheme: semver
                 increment: patch
+  
+            - name: Create a GitHub Release
+              uses: actions/create-release@v1
+              env:
+                GITHUB_TOKEN: ${{ secrets.PAT }}
+              with:
+                tag_name: ${{ steps.version.outputs.version }}
+                release_name: Release ${{ steps.version.outputs.version }}
+                body: Automated release for version ${{ steps.version.outputs.version }}
 
             - name: Azure Login
               uses: Azure/login@v1
@@ -43,8 +52,8 @@ jobs:
 
             - name: Image build and testing
               run: |
-                docker buildx build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
-                docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/backend:${{ steps.version.outputs.version }}
+                docker buildx build -t ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }} .
+                docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/test-backend:${{ steps.version.outputs.version }}
 
                 echo "Waiting for the container to start..."
 
@@ -54,5 +63,16 @@ jobs:
                 echo "Testing /api/docs/endpoint..."
                 status_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:8080/api/docs)
                 echo "Received status code: $status_code"
+
+            - name: ACR login
+              uses: azure/docker-login@v2
+              id: build
+              with:
+                login-server: ${{ secrets.ACR_LOGIN_SERVER }}
+                username: ${{ secrets.ACR_USERNAME }}
+                password: ${{ secrets.ACR_PASSWORD }}
+            - run: |
+                docker push ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }}
+      
 
 

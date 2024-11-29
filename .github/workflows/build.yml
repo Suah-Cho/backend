@@ -54,7 +54,7 @@ jobs:
               id: testing
               run: |
                 docker buildx build -t ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }} .
-                docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/test-backend:${{ steps.version.outputs.version }}
+                docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/test-backend:${{ steps.version.outputs.version }} --env-file dev.env
 
                 echo "Waiting for the container to start..."
 

@@ -51,6 +51,7 @@ jobs:
                 ls -al
 
             - name: Image build and testing
+              id: testing
               run: |
                 docker buildx build -t ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }} .
                 docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/test-backend:${{ steps.version.outputs.version }}
@@ -63,8 +64,10 @@ jobs:
                 echo "Testing /api/docs/endpoint..."
                 status_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:8080/api/docs)
                 echo "Received status code: $status_code"
+                echo "::set-output name=status_code::$status_code"
 
             - name: ACR login
+              if: steps.testing.outputs.status_code == 200
               uses: azure/docker-login@v2
               id: build
               with:

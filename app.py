@@ -12,7 +12,7 @@ MODE = os.getenv('MODE')
 def get_docs():
     print("It's api docs for test")
 
-    return JSONResponse(status_code=200, content={"message" : "api docs"})
+    return JSONResponse(status_code=400, content={"message" : "api docs"})
 
 @app.get('/')
 def get_test():

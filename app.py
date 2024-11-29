@@ -2,23 +2,22 @@ from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 import requests
 import logging
-import os
+from config import config
 
 app = FastAPI()
-API_MODE = os.getenv('API_MODE')
-MODE = os.getenv('MODE')
 
 @app.get('/api/docs')
 def get_docs():
     print("It's api docs for test")
+    print(config.API_MODE)
 
-    return JSONResponse(status_code=400, content={"message" : "api docs"})
+    return JSONResponse(status_code=200, content={"message" : "api docs"})
 
 @app.get('/')
 def get_test():
     print("test")
     
-    return JSONResponse(status_code=200, content={"message": "Hello, World! from " + "API MODE is " + API_MODE + "MODE is " + MODE})
+    return JSONResponse(status_code=200, content={"message": "Hello, World! from " + "API MODE is " + config.API_MODE})
 
 
 

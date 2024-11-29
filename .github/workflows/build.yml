@@ -45,7 +45,7 @@ jobs:
             - name: make env file
               run: |
                 chmod +x ./CICD-pipeline/resources/scripts/make_env.bash
-                ./CICD-pipeline/resources/scripts/make_env.bash dev
+                ./CICD-pipeline/resources/scripts/make_env.bash test
                 pwd
 
             - name: Image build and testing
@@ -53,7 +53,7 @@ jobs:
               run: |
                 docker buildx build -t ${{ secrets.ACR_LOGIN_SERVER }}/test-backend:${{ steps.version.outputs.version }} .
                 pwd
-                docker run -d -p 8080:8000 --name test --env-file ./dev.env ${{ secrets.ACR_LOGIN_SERVER}}/test-backend:${{ steps.version.outputs.version }}
+                docker run -d -p 8080:8000 --name test --env-file ./test.env ${{ secrets.ACR_LOGIN_SERVER}}/test-backend:${{ steps.version.outputs.version }}
 
                 echo "Waiting for the container to start..."
 

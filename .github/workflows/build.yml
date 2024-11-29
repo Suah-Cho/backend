@@ -48,6 +48,7 @@ jobs:
 
                 echo "Waiting for the container to start..."
 
+                sleep 2
                 docker ps
                 
                 echo "Testing /api/docs/endpoint..."

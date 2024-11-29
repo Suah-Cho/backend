@@ -8,6 +8,12 @@ app = FastAPI()
 API_MODE = os.getenv('API_MODE')
 MODE = os.getenv('MODE')
 
+@app.get('/api/docs')
+def get_docs():
+    print("It's api docs for test")
+
+    return JSONResponse(status_code=200, content={"message" : "api docs"})
+
 @app.get('/')
 def get_test():
     print("test")

@@ -13,6 +13,13 @@ jobs:
             - name: Checkout repository
               uses: actions/checkout@v2
 
+            - name: Get next version
+              uses: reecetech/version-increment@2024.4.3
+              id: version
+              with:
+                scheme: semver
+                increment: patch
+
             - name: Azure Login
               uses: Azure/login@v1
               with:
@@ -33,3 +40,16 @@ jobs:
                 chmod +x make_env.bash
                 ./make_env.bash dev
                 ls -al
+
+            - name: Image build and testing
+              run: |
+                docker buildx build -t ${{ secrets.ACR_LOGIN_SERVER }}/backend:${{ steps.version.outputs.version }} .
+                docker run -d -p 8080:8000 --name test ${{ secrets.ACR_LOGIN_SERVER}}/backend:${{ steps.version.outputs.version }}
+
+                echo "Waiting for the container to start..."
+                
+                echo "Testing /api/docs/endpoint..."
+                status_code=$(curl -o /dev/null -s -w "%{http_code}" http://localhost:8080/api/docs)
+                echo "Received status code: $status_code"
+
+
